@@ -1,0 +1,7 @@
+venv
+.env
+.mypy_cache
+
+/.vscode
+/data
+/target
