@@ -1,5 +1,5 @@
 import re
-import os
+from io import TextIOWrapper
 
 
 REGEX1 = r"(\d)"
@@ -24,17 +24,12 @@ def to_int(s):
         return m[s]
 
 
-def main():
-    path = os.path.join(os.path.dirname(__file__), "data")
-    path_in = os.path.join(path, "1.in")
-    path_out = os.path.join(path, "1.out")
-
-    with open(path_in, "r") as f:
-        lines = f.readlines()
+def p(f: TextIOWrapper, regex: str) -> int:
+    lines = f.readlines()
 
     sum = 0
     for line in lines:
-        res = re.findall(REGEX2, line)
+        res = re.findall(regex, line)
         if len(res) > 0:
             a = to_int(res[0])
         else:
@@ -46,9 +41,12 @@ def main():
 
         sum += a * 10 + b
 
-    with open(path_out, "w") as f:
-        f.write(str(sum) + "\n")
+    return sum
 
 
-if __name__ == "__main__":
-    main()
+def p1(f):
+    return p(f, REGEX1)
+
+
+def p2(f):
+    return p(f, REGEX2)
