@@ -24,8 +24,8 @@ if __name__ == "__main__":
     if func is None:
         raise ValueError(f"Day {args.day} does not have part {part}")
 
-    print("test:")
-    run(func, f"data/{day}.test{part}")
+    # print("test:")
+    # run(func, f"data/{day}.test{part}")
 
-    print("input:")
+    # print("input:")
     run(func, f"data/{args.day}.in")

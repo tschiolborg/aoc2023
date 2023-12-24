@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from io import TextIOWrapper
+from math import lcm
 
 
 @dataclass
@@ -7,6 +8,13 @@ class Node:
     key: str
     left: str
     right: str
+
+
+@dataclass
+class Pair:
+    start: str
+    end: str
+    cycle: int
 
 
 def p1(f: TextIOWrapper) -> int:
@@ -55,6 +63,7 @@ def p2(f: TextIOWrapper) -> int:
     nodes: dict[str, Node] = {}
 
     start_nodes: list[str] = []
+    end_nodes: list[str] = []
 
     for line in lines:
         line = line.strip()
@@ -71,25 +80,33 @@ def p2(f: TextIOWrapper) -> int:
 
         if node.endswith("A"):
             start_nodes.append(node)
+        elif node.endswith("Z"):
+            end_nodes.append(node)
 
-    res = 0
+    end_set = set(end_nodes)
+    pairs: list[Pair] = []
 
-    # slow
+    for node in start_nodes:
+        found_cycle = False
+        end = None
+        cycle = 0
+        while True:
+            if found_cycle:
+                break
 
-    while True:
-        for s in seq:
-            is_done = True
-            new_nodes = []
-            for node in start_nodes:
-                if not node.endswith("Z"):
-                    is_done = False
+            for s in seq:
+                if end is not None:
+                    cycle += 1
+                if end is not None and node == end:
+                    found_cycle = True
+                    pairs.append(Pair(node, end, cycle))
+                    break
+                if node in end_set:
+                    end_set.discard(node)
+                    end = node
                 if s == "L":
                     node = nodes[node].left
                 else:
                     node = nodes[node].right
-                new_nodes.append(node)
-            if is_done:
-                return res
-            res += 1
-            start_nodes = new_nodes
-        print(res)
+
+    return lcm(*(pair.cycle for pair in pairs))
